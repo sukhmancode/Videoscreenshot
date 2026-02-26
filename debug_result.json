@@ -1,0 +1,45 @@
+{
+  "asset_id": "fa9268266ba6cefecf6ac771a8e831cb",
+  "public_id": "test_snapshots/zittcz4ygukfzxu3avqe",
+  "version": 1772114461,
+  "version_id": "f5caeeba4f36b8c2f1994ea7539ed3b1",
+  "signature": "8cdb5a4be5d7a1925e90f1e3de6e5852f82eacb2",
+  "width": 854,
+  "height": 480,
+  "format": "mp4",
+  "resource_type": "video",
+  "created_at": "2026-02-26T14:01:01Z",
+  "tags": [],
+  "bytes": 9094354,
+  "type": "upload",
+  "placeholder": false,
+  "url": "http://res.cloudinary.com/dbxh4txiq/video/upload/v1772114461/test_snapshots/zittcz4ygukfzxu3avqe.mp4",
+  "secure_url": "https://res.cloudinary.com/dbxh4txiq/video/upload/v1772114461/test_snapshots/zittcz4ygukfzxu3avqe.mp4",
+  "playback_url": "https://res.cloudinary.com/dbxh4txiq/video/upload/sp_auto/v1772114461/test_snapshots/zittcz4ygukfzxu3avqe.m3u8",
+  "folder": "test_snapshots",
+  "access_mode": "public",
+  "eager": [
+    {
+      "transformation": "so_1,t_f_auto,q_auto/jpg",
+      "status": "failed",
+      "reason": "Unknown transformation f_auto",
+      "exception": {
+        "status": 400,
+        "code": null,
+        "meta": null,
+        "owner_message": null
+      }
+    },
+    {
+      "transformation": "so_2,t_f_auto,q_auto/jpg",
+      "status": "failed",
+      "reason": "Unknown transformation f_auto",
+      "exception": {
+        "status": 400,
+        "code": null,
+        "meta": null,
+        "owner_message": null
+      }
+    }
+  ]
+}

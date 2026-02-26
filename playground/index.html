@@ -224,7 +224,13 @@ const url = `${parts[0]}/video/upload/so_${ts},${transform}/${parts[1]}`;</code>
         generateBtn.addEventListener('click', () => {
             const videoUrl = document.getElementById('videoSource').value;
             const tsInput = document.getElementById('timestamps').value;
-            const transform = document.getElementById('transform').value;
+            const cloudName = document.getElementById('cloudName').value;
+            const apiKey = document.getElementById('apiKey').value;
+
+            if (!cloudName || !apiKey) {
+                alert('Please enter your Cloudinary Cloud Name and API Key.');
+                return;
+            }
 
             const timestamps = tsInput.split(',').map(t => parseFloat(t.trim())).filter(t => !isNaN(t));
 
@@ -232,6 +238,8 @@ const url = `${parts[0]}/video/upload/so_${ts},${transform}/${parts[1]}`;</code>
                 alert('Please provide valid timestamps');
                 return;
             }
+
+            const transform = 'f_auto,q_auto'; // Static default for simulation
 
             // Clear grid
             resultsGrid.innerHTML = '';

@@ -14,6 +14,7 @@ export interface SnapshotInput {
   videoUrl: string;
   timeStamps: number[];
   transformation?: string;
+  duration?: number;
 }
 
 /**

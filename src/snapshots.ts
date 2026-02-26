@@ -18,7 +18,17 @@ export async function getCloudinarySnapshots(input: SnapshotInput): Promise<Snap
         throw new ValidationError(`Invalid input: ${errorMessages}`);
     }
 
-    const { videoUrl, timeStamps, transformation } = validation.data;
+    const { videoUrl, timeStamps, transformation, duration } = validation.data;
+
+    // Optional duration validation
+    if (duration !== undefined) {
+        const invalidTimestamps = timeStamps.filter(ts => ts > duration);
+        if (invalidTimestamps.length > 0) {
+            throw new ValidationError(
+                `Invalid timestamps: [${invalidTimestamps.join(', ')}]. Video duration is ${duration}s.`
+            );
+        }
+    }
 
     const screenshotUrls = timeStamps.map(ts =>
         generateSnapshotUrl(videoUrl, ts, transformation)
