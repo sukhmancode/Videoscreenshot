@@ -2,8 +2,8 @@
     "version": 2,
     "builds": [
         {
-            "src": "package.json",
-            "use": "@vercel/node"
+            "src": "playground/index.html",
+            "use": "@vercel/static"
         }
     ],
     "routes": [
@@ -11,7 +11,5 @@
             "src": "/",
             "dest": "playground/index.html"
         }
-    ],
-    "installCommand": "npm install",
-    "buildCommand": "npm run build"
+    ]
 }
