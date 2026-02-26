@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloudinary Snapshot Lab | Antigravity</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #050505;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.5);
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #e5e7eb;
+            font-family: 'Outfit', sans-serif;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(147, 51, 234, 0.05) 0%, transparent 40%);
+            min-height: 100vh;
+        }
+
+        .glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            box-shadow: 0 0 20px var(--accent-glow);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .screenshot-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .screenshot-card:hover {
+            transform: scale(1.05);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #444;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <header class="mb-12 text-center">
+            <h1 class="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-4">
+                Snapshot Lab
+            </h1>
+            <p class="text-gray-400 text-lg">Test your video-to-screenshot logic in real-time.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Sidebar Controls -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="glass p-6 space-y-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-3 animate-pulse"></span>
+                        Configuration
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <div class="flex flex-col">
+                            <label class="text-sm text-gray-400 mb-1">Cloud Name</label>
+                            <input type="text" id="cloudName" class="input-field" placeholder="e.g. demo" value="demo">
+                        </div>
+                        
+                        <div class="flex flex-col">
+                            <label class="text-sm text-gray-400 mb-1">Video URL / Public ID</label>
+                            <input type="text" id="videoSource" class="input-field" placeholder="Full URL or public_id" value="https://res.cloudinary.com/demo/video/upload/dog.mp4">
+                        </div>
+
+                        <div class="flex flex-col">
+                            <label class="text-sm text-gray-400 mb-1">Timestamps (seconds, comma separated)</label>
+                            <input type="text" id="timestamps" class="input-field" placeholder="e.g. 2, 5, 10, 25" value="1, 4, 8">
+                        </div>
+
+                        <div class="flex flex-col">
+                            <label class="text-sm text-gray-400 mb-1">Transformations</label>
+                            <input type="text" id="transform" class="input-field" placeholder="e.g. w_500,h_300,c_fill" value="w_600,f_auto,q_auto">
+                        </div>
+
+                        <button id="generateBtn" class="btn-primary w-full py-4 rounded-xl font-bold text-lg mt-4">
+                            Generate Snapshots
+                        </button>
+                    </div>
+                </div>
+
+                <div class="glass p-6">
+                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-widest mb-4">Active Logic</h3>
+                    <div class="bg-black/40 p-4 rounded-lg overflow-x-auto">
+                        <pre class="text-xs text-blue-300"><code>// generateSnapshotUrl
+const baseUrl = videoUrl.replace(/\.[^/.]+$/, '.jpg');
+const parts = baseUrl.split('/video/upload/');
+const url = `${parts[0]}/video/upload/so_${ts},${transform}/${parts[1]}`;</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Preview Area -->
+            <div class="lg:col-span-2 space-y-8">
+                <div id="resultsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Dynamic screenshots will appear here -->
+                    <div class="col-span-full py-20 text-center text-gray-500 border-2 border-dashed border-gray-800 rounded-3xl">
+                        Enter video data and click generate to see screenshots.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-20 pt-8 border-t border-gray-900 text-center text-gray-600">
+            <p>Built with Antigravity Protocol &bull; Production Grade Architecture</p>
+        </footer>
+    </div>
+
+    <script>
+        /**
+         * Pure logic mirrored from the NPM package
+         */
+        function generateSnapshotUrl(videoUrl, timeStamp, transformation = 'f_auto,q_auto') {
+            // Standardize URL: ensure it's a Cloudinary URL and ends with .jpg for the snapshot
+            let baseUrl = videoUrl.replace(/\.[^/.]+$/, '.jpg');
+            
+            const uploadMarker = '/video/upload/';
+            if (!baseUrl.includes(uploadMarker)) {
+                baseUrl = baseUrl.replace('/video/', '/video/upload/');
+            }
+
+            const parts = baseUrl.split(uploadMarker);
+            if (parts.length !== 2) return baseUrl;
+
+            const [prefix, suffix] = parts;
+            const snapshotTransform = `so_${timeStamp}${transformation ? `,${transformation}` : ''}`;
+            
+            return `${prefix}${uploadMarker}${snapshotTransform}/${suffix}`;
+        }
+
+        const generateBtn = document.getElementById('generateBtn');
+        const resultsGrid = document.getElementById('resultsGrid');
+
+        generateBtn.addEventListener('click', () => {
+            const videoUrl = document.getElementById('videoSource').value;
+            const tsInput = document.getElementById('timestamps').value;
+            const transform = document.getElementById('transform').value;
+
+            const timestamps = tsInput.split(',').map(t => parseFloat(t.trim())).filter(t => !isNaN(t));
+
+            if (timestamps.length === 0) {
+                alert('Please provide valid timestamps');
+                return;
+            }
+
+            // Clear grid
+            resultsGrid.innerHTML = '';
+
+            timestamps.forEach(ts => {
+                const url = generateSnapshotUrl(videoUrl, ts, transform);
+                
+                const card = document.createElement('div');
+                card.className = 'glass overflow-hidden screenshot-card group';
+                card.innerHTML = `
+                    <div class="aspect-video relative overflow-hidden bg-black/50">
+                        <img src="${url}" alt="Snapshot at ${ts}s" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                            <span class="text-white font-semibold">${ts} Seconds</span>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-black/20">
+                        <div class="flex items-center justify-between mb-2">
+                             <span class="text-xs font-mono text-blue-400">Timestamp: ${ts}s</span>
+                             <button onclick="navigator.clipboard.writeText('${url}')" class="text-[10px] bg-white/10 hover:bg-white/20 px-2 py-1 rounded text-gray-300">Copy URL</button>
+                        </div>
+                        <input type="text" readonly value="${url}" class="w-full bg-black/50 border border-white/5 rounded px-2 py-1 text-[10px] font-mono text-gray-500 overflow-ellipsis">
+                    </div>
+                `;
+                resultsGrid.appendChild(card);
+            });
+        });
+    </script>
+</body>
+</html>

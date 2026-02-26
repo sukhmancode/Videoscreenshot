@@ -1,0 +1,44 @@
+/**
+ * Configuration options for the Cloudinary Snapshots package.
+ */
+export interface CloudinaryConfig {
+  cloudName: string;
+  apiKey: string;
+  apiSecret: string;
+}
+
+/**
+ * Input for generating snapshots from a video URL.
+ */
+export interface SnapshotInput {
+  videoUrl: string;
+  timeStamps: number[];
+  transformation?: string;
+}
+
+/**
+ * Result of the snapshot generation process.
+ */
+export interface SnapshotResult {
+  screenshotUrls: string[];
+}
+
+/**
+ * Options for uploading a video to Cloudinary.
+ */
+export interface UploadOptions {
+  folder?: string;
+  publicId?: string;
+  resourceType?: 'video' | 'auto';
+  overwrite?: boolean;
+}
+
+/**
+ * Result of the video upload.
+ */
+export interface UploadResult {
+  secureUrl: string;
+  publicId: string;
+  duration: number;
+  format: string;
+}
