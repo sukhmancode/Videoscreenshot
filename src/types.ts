@@ -42,3 +42,19 @@ export interface UploadResult {
   duration: number;
   format: string;
 }
+/**
+ * Options for the full flow: Upload video + capture multiple snapshots.
+ */
+export interface FullFlowOptions extends UploadOptions {
+  config: CloudinaryConfig;
+  timestamps: number[];
+  screenshotTransform?: string;
+}
+
+/**
+ * Result of the full combined flow.
+ */
+export interface FullFlowResult {
+  video: UploadResult;
+  snapshots: string[];
+}

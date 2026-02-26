@@ -1,41 +1,43 @@
-import { configureCloudinary, uploadVideo, getCloudinarySnapshots } from './src/index.js';
+import { uploadVideoWithSnapshots } from './src/index.js';
 import dotenv from 'dotenv';
+import path from 'path';
 
 dotenv.config();
 
-async function runExample() {
+/**
+ * This example demonstrates the NEW combined flow:
+ * 1. Takes user input (Cloudinary Credentials + Video File)
+ * 2. Uploads the video TO the user's account
+ * 3. Force-generates and STORES snapshots in that same account
+ */
+async function runFullFlow() {
     try {
-        // 1. Initialize
-        configureCloudinary({
-            cloudName: process.env.CLOUDINARY_CLOUD_NAME || '',
-            apiKey: process.env.CLOUDINARY_API_KEY || '',
-            apiSecret: process.env.CLOUDINARY_API_SECRET || '',
+        const credentials = {
+            cloudName: process.env.CLOUDINARY_CLOUD_NAME || 'your_cloud_name',
+            apiKey: process.env.CLOUDINARY_API_KEY || 'your_api_key',
+            apiSecret: process.env.CLOUDINARY_API_SECRET || 'your_api_secret',
+        };
+
+        const videoPath = 'https://res.cloudinary.com/demo/video/upload/dog.mp4'; // Can be local path, URL, or base64
+
+        console.log('--- Starting Full Flow (Upload + Persistent Snapshots) ---');
+
+        const result = await uploadVideoWithSnapshots(videoPath, {
+            config: credentials,
+            timestamps: [1, 5, 10],
+            folder: 'user_content/videos',
+            screenshotTransform: 'w_1080,c_limit,q_auto' // High quality snapshots
         });
 
-        console.log('--- Uploading Video ---');
-        // 2. Upload (Optional)
-        // Note: You can skip this if you already have a Cloudinary video URL
-        // const upload = await uploadVideo('./path/to/video.mp4', { folder: 'previews' });
-        // console.log('Uploaded:', upload.secureUrl);
-
-        const mockVideoUrl = 'https://res.cloudinary.com/demo/video/upload/dog.mp4';
-
-        console.log('--- Generating Snapshots ---');
-        // 3. Generate Screenshot URLs
-        const result = await getCloudinarySnapshots({
-            videoUrl: mockVideoUrl,
-            timeStamps: [2, 5, 10, 15],
-            transformation: 'w_500,h_300,c_fill,g_auto,f_webp' // Optional: Custom transformations
-        });
-
-        console.log('Screenshot URLs:');
-        result.screenshotUrls.forEach((url, i) => {
-            console.log(`[${i}] ${url}`);
+        console.log('Video Stored At:', result.video.secureUrl);
+        console.log('Snapshots Stored At:');
+        result.snapshots.forEach((url, i) => {
+            console.log(`[Snapshot ${i}] ${url}`);
         });
 
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Flow failed:', error);
     }
 }
 
-// runExample();
+// runFullFlow();
