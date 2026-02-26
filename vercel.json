@@ -6,6 +6,12 @@
             "use": "@vercel/node"
         }
     ],
+    "routes": [
+        {
+            "src": "/",
+            "dest": "playground/index.html"
+        }
+    ],
     "installCommand": "npm install",
     "buildCommand": "npm run build"
 }
