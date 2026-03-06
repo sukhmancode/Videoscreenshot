@@ -103,10 +103,6 @@ app.get('/', (req: Request, res: Response) => {
  *                   type: number
  *                 description: Array of seconds where snapshots should be taken.
  *                 example: [1, 5, 10]
- *               transformation:
- *                 type: string
- *                 description: Cloudinary image transformation string to apply to the snapshots.
- *                 example: "w_300,h_200,c_fill"
  *     responses:
  *       200:
  *         description: Successfully generated snapshots
@@ -144,7 +140,7 @@ app.get('/', (req: Request, res: Response) => {
  */
 app.post('/api/snapshots', async (req: Request, res: Response) => {
     try {
-        const { videoUrl, timeStamps, transformation } = req.body;
+        const { videoUrl, timeStamps } = req.body;
 
         if (!videoUrl || !timeStamps || !Array.isArray(timeStamps)) {
             return res.status(400).json({
@@ -155,8 +151,7 @@ app.post('/api/snapshots', async (req: Request, res: Response) => {
 
         const result = await getSnapshotUrls({
             videoUrl,
-            timeStamps,
-            transformation
+            timeStamps
         });
 
         res.json(result);

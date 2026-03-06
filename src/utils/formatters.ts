@@ -8,9 +8,9 @@
  */
 export function generateSnapshotUrl(
     videoUrl: string,
-    timeStamp: number,
-    transformation: string = 'f_auto,q_auto'
+    timeStamp: number
 ): string {
+    const transformation = 'f_auto,q_auto';
     // Replace the extension with .jpg (or .png/webp if preferred)
     // Cloudinary handles format conversion automatically
     let baseUrl = videoUrl.replace(/\.[^/.]+$/, '.jpg');

@@ -18,7 +18,7 @@ export async function getSnapshotUrls(input: SnapshotInput): Promise<DetailedSna
         throw new ValidationError(`Invalid input: ${errorMessages}`);
     }
 
-    const { videoUrl, timeStamps, transformation, duration } = validation.data;
+    const { videoUrl, timeStamps, duration } = validation.data;
 
     // Optional duration validation
     if (duration !== undefined) {
@@ -32,7 +32,7 @@ export async function getSnapshotUrls(input: SnapshotInput): Promise<DetailedSna
 
     const screenshots = timeStamps.map(ts => ({
         timestamp: ts,
-        url: generateSnapshotUrl(videoUrl, ts, transformation)
+        url: generateSnapshotUrl(videoUrl, ts)
     }));
 
     return {

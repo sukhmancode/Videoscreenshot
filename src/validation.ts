@@ -9,7 +9,6 @@ export const CloudinaryConfigSchema = z.object({
 export const SnapshotInputSchema = z.object({
     videoUrl: z.string().url("Invalid video URL"),
     timeStamps: z.array(z.number().min(0, "Timestamp must be non-negative")).min(1, "At least one timestamp is required"),
-    transformation: z.string().optional(),
     duration: z.number().min(0).optional(),
 });
 
