@@ -1,16 +1,16 @@
-import { SnapshotInput, SnapshotResult } from './types.js';
+import { SnapshotInput, SnapshotResult, DetailedSnapshotResult } from './types.js';
 import { SnapshotInputSchema } from './validation.js';
 import { ValidationError } from './utils/errors.js';
 import { generateSnapshotUrl } from './utils/formatters.js';
 
 /**
- * Generates high-quality screenshot URLs for a Cloudinary video.
+ * Returns a detailed result including timestamps and their corresponding
+ * Cloudinary screenshot URLs.
  * 
- * @param input The video URL and timestamps.
- * @returns Array of optimized image URLs.
- * @throws ValidationError if input is invalid.
+ * @param input - { videoUrl, timeStamps, transformation?, duration? }
+ * @returns DetailedSnapshotResult with screenshots array.
  */
-export async function getCloudinarySnapshots(input: SnapshotInput): Promise<SnapshotResult> {
+export async function getSnapshotUrls(input: SnapshotInput): Promise<DetailedSnapshotResult> {
     const validation = SnapshotInputSchema.safeParse(input);
 
     if (!validation.success) {
@@ -30,11 +30,28 @@ export async function getCloudinarySnapshots(input: SnapshotInput): Promise<Snap
         }
     }
 
-    const screenshotUrls = timeStamps.map(ts =>
-        generateSnapshotUrl(videoUrl, ts, transformation)
-    );
+    const screenshots = timeStamps.map(ts => ({
+        timestamp: ts,
+        url: generateSnapshotUrl(videoUrl, ts, transformation)
+    }));
 
     return {
-        screenshotUrls
+        screenshots,
+        total: screenshots.length
+    };
+}
+
+/**
+ * Generates high-quality screenshot URLs for a Cloudinary video.
+ * 
+ * @param input The video URL and timestamps.
+ * @returns Array of optimized image URLs.
+ * @throws ValidationError if input is invalid.
+ */
+export async function getCloudinarySnapshots(input: SnapshotInput): Promise<SnapshotResult> {
+    const detailed = await getSnapshotUrls(input);
+
+    return {
+        screenshotUrls: detailed.screenshots.map(s => s.url)
     };
 }

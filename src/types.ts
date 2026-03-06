@@ -17,6 +17,19 @@ export interface SnapshotInput {
   duration?: number;
 }
 
+export interface SnapshotEntry {
+  timestamp: number;
+  url: string;
+}
+
+/**
+ * Result of the snapshot generation process with timestamps.
+ */
+export interface DetailedSnapshotResult {
+  screenshots: SnapshotEntry[];
+  total: number;
+}
+
 /**
  * Result of the snapshot generation process.
  */
